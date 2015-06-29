@@ -10,4 +10,5 @@ task :build => :compile
 
 Rake::ExtensionTask.new("minimu9ahrs") do |ext|
   ext.lib_dir = "lib/minimu9ahrs"
+  ext.source_pattern = "*.{c,cpp,h,hpp}"
 end
