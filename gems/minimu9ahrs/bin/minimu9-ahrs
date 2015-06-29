@@ -1,0 +1,72 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'minimu9ahrs'
+require 'optparse'
+
+
+options = {}
+options[:i2c] = '/dev/i2c-1'
+options[:mode] = 'raw'
+options[:output] = 'raw'
+
+def stream_raw_values(imu)
+  while true
+    imu.readAll
+    raw = imu.raw_data
+
+    printf("%7d %7d %7d  %7d %7d %7d  %7d %7d %7d\n",
+           raw[0][0], raw[0][1], raw[0][2],
+           raw[1][0], raw[1][1], raw[1][2],
+           raw[2][0], raw[2][1], raw[2][2])
+    sleep(0.1)
+  end
+end
+
+
+OptionParser.new do |opts|
+  opts.banner = 'Usage: raw_dump [options]'
+
+  opts.on('-b', '--i2c-bus DEVICENAME', 'Which I2c bus to use') do |b|
+    options[:i2c] = b
+  end
+
+  opts.on('-m', '--mode MODE', "specifies what algorithm to use.\n\t\t\t\t\tnormal: Fuse compass and gyro.\n\t\t\t\t\tgyro-only:  Use only gyro (drifts).\n\t\t\t\t\tcompass-only:  Use only compass (noisy).\n\t\t\t\t\traw: (default)Just print raw values from sensors.") do |mode|
+    options[:mode] = mode.to_lower
+  end
+
+  opts.on('-o', '--output MODE', "specifies how to output the orientation.\n\t\t\t\t\tmatrix: Direction Cosine Matrix.\n\t\t\t\t\tquaternion: Quaternion.\n\t\t\t\t\teuler: Euler angles (yaw, pitch, roll).\n") do |mode|
+    options[:output] = mode.to_lower
+  end
+
+  # No argument, shows at tail.  This will print an options summary.
+  # Try it and see!
+  opts.on_tail('-h', '--help', 'Show this message') do
+    puts opts
+    exit
+  end
+
+  # Another typical switch to print the version.
+  opts.on_tail('--version', 'Show version') do
+    puts Minimu9ahrs::Version.join('.')
+    exit
+  end
+end.parse!
+
+unless File.exist?(options[:i2c])
+  puts "I2C device #{options[:i2c]} not found.  You probably need to pass -b DEVICE."
+  exit
+end
+
+imu = Minimu9ahrs::MinIMU9.new options[:i2c]
+imu.enable
+
+if options[:mode] == 'raw'
+  stream_raw_values imu
+else
+  puts 'Only raw output currently supported'
+  exit
+end
+
+exit
+
