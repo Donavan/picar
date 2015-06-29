@@ -29,19 +29,19 @@ describe Minimu9ahrs::MinIMU9 do
     end
 
     it 'has a function to read the magnetometer' do
-      expect(@minimu).to respond_to(:readMag)
+      expect(@minimu).to respond_to(:read_mag)
     end
 
     it 'has a function to read the accelerometer' do
-      expect(@minimu).to respond_to(:readAcc)
+      expect(@minimu).to respond_to(:read_acc)
     end
 
     it 'has a function to read the gyro' do
-      expect(@minimu).to respond_to(:readGyro)
+      expect(@minimu).to respond_to(:read_gyro)
     end
 
     it 'has a function to read the all sensors' do
-      expect(@minimu).to respond_to(:readAll)
+      expect(@minimu).to respond_to(:read)
     end
 
     it 'can provide raw sensor data from the magnetometer' do
@@ -71,6 +71,11 @@ describe Minimu9ahrs::MinIMU9 do
     it 'makes the gyro available' do
       expect(@minimu).to respond_to(:gyro)
       expect(@minimu.gyro.class).to eq(Minimu9ahrs::L3G)
+    end
+
+    it 'makes the magnetometer/accelerometer available' do
+      expect(@minimu).to respond_to(:compass)
+      expect(@minimu.compass.class).to eq(Minimu9ahrs::LSM303)
     end
 
     describe 'enable functionality' do
@@ -130,7 +135,7 @@ describe Minimu9ahrs::MinIMU9 do
 
     describe 'reading data' do
       it 'returns all zeros for raw data if not enabled' do
-        @minimu.readAll
+        @minimu.read
         raw_data = @minimu.raw_data
         raw_data.each_with_index  do |sensor_data, sensors_index|
           (0..2).each do |data_index|
@@ -151,7 +156,7 @@ describe Minimu9ahrs::MinIMU9 do
 
       it 'returns real values for raw data if enabled and read has been called' do
         @minimu.enable
-        @minimu.readAll
+        @minimu.read
         raw_data = @minimu.raw_data
         raw_data.each_with_index  do |sensor_data, sensors_index|
           (0..2).each do |data_index|

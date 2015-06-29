@@ -35,6 +35,7 @@ public:
 
   bool isEnabled() { return compass.isEnabled() && gyro.isEnabled(); }
   L3G getGyro() { return gyro; }
+  LSM303 getCompass() { return compass; }
 
 private:
   bool _enabled;
