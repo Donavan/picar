@@ -7,14 +7,6 @@ end
 describe Minimu9ahrs::LSM303 do
   clazz = Minimu9ahrs::LSM303
 
-  describe 'class level' do
-    it 'requires an I2C bus device to initialize' do
-      # TODO: Revisit this to find a workaround for Rice not mapping constructors to initialize
-      # expect(clazz.instance_method(:initialize).arity).to eq(1)
-      skip 'Constructor not mapped to initialize and no initialize written yet'
-    end
-  end
-
   describe 'instance level' do
     before(:each) do
       @lsm303= clazz.new(test_i2c_device)
