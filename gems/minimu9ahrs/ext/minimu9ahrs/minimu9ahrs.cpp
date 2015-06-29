@@ -1,7 +1,6 @@
 #include "rice/Constructor.hpp"
 #include "rice/String.hpp"
 #include "MinIMU9.h"
-#include "vector.h"
 
 using namespace Rice;
 
@@ -25,4 +24,12 @@ void Init_minimu9ahrs()
                                 .define_method("load_calibration",      &MinIMU9::loadCalibration)
                                 .define_method("load_calibration_from", &MinIMU9::loadCalibrationFrom)
                                 .define_method("measure_offsets",       &MinIMU9::measureOffsets);
+
+    Data_Type<L3G> rb_cL3G =  define_class_under<L3G>(rb_mModule, "L3G")
+            .define_constructor(Constructor<L3G, const char *>())
+            .define_method("enable",    &L3G::enable)
+            .define_method("enabled?",  &L3G::isEnabled)
+            .define_method("read",      &L3G::read)
+            .define_method("write_reg", &L3G::writeReg)
+            .define_method("read_reg",  &L3G::readReg);
 }
