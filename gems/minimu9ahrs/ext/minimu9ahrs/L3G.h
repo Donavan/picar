@@ -48,8 +48,9 @@ public:
     void writeReg(uint8_t reg, uint8_t value);
     uint8_t readReg(uint8_t reg);
     void read();
-
+    bool isEnabled() { return _enabled; }
 private:
+    bool _enabled;
     void detectAddress();
     I2CBus i2c;
 };

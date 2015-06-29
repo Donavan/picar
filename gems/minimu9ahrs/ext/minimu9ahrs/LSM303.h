@@ -156,8 +156,9 @@ class LSM303
     void readAcc(void);
     void readMag(void);
     void read(void);
-
+    bool isEnabled() { return _enabled; }
 private:
+    bool _enabled;
     I2CBus i2c_mag, i2c_acc;
     enum class Device {
         LSM303DLH,

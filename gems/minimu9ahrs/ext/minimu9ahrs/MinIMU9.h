@@ -31,6 +31,11 @@ public:
   Rice::Array getRawAcc();
   Rice::Array getRawGyro();
   Rice::Array getRawData();
+
+  bool isEnabled() { return _enabled; }
+
+private:
+  bool _enabled;
 };
 
 #endif

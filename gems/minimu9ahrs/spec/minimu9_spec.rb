@@ -94,7 +94,44 @@ describe Minimu9ahrs::MinIMU9 do
         expect(sensor_data.class).to eq(Array), "Expected raw data element #{sensors_index} to be an Array got #{sensor_data.class}."
         expect(sensor_data.count).to eq(3), "Expected raw data element #{sensors_index} to have three elements got #{sensor_data.count}."
         (0..2).each do |data_index|
-          expect(sensor_data[data_index].class).to eq(Float), "Expected raw sensor data element #{sensors_index} for senesor #{sensors_index} to be a float got #{sensor_data[data_index].class}."
+          expect(sensor_data[data_index].class).to eq(Float), "Expected raw sensor data element #{sensors_index} for sensor #{sensors_index} to be a float got #{sensor_data[data_index].class}."
+        end
+      end
+    end
+
+  end
+
+  describe 'reading data' do
+    it 'returns all zeros for raw data if not enabled' do
+      minimu = clazz.new(test_i2c_device)
+      minimu.readAll
+      raw_data = minimu.raw_data
+      raw_data.each_with_index  do |sensor_data, sensors_index|
+        (0..2).each do |data_index|
+          expect(sensor_data[data_index]).to eq(0) #,  "Expected raw sensor data element #{sensors_index} for sensor #{sensors_index} to have a value of 0 got #{sensor_data[data_index]}."
+        end
+      end
+    end
+
+    it 'returns all zeros for raw data if enabled and read has not been called' do
+      minimu = clazz.new(test_i2c_device)
+      minimu.enable
+      raw_data = minimu.raw_data
+      raw_data.each_with_index  do |sensor_data, sensors_index|
+        (0..2).each do |data_index|
+          expect(sensor_data[data_index]).to eq(0) #, "Expected raw sensor data element #{sensors_index} for sensor #{sensors_index} to have a value of 0 got #{sensor_data[data_index]}."
+        end
+      end
+    end
+
+    it 'returns real values for raw data if enabled and read has been called' do
+      minimu = clazz.new(test_i2c_device)
+      minimu.enable
+      minimu.readAll
+      raw_data = minimu.raw_data
+      raw_data.each_with_index  do |sensor_data, sensors_index|
+        (0..2).each do |data_index|
+          expect(sensor_data[data_index]).to_not eq(0) #, "Expected raw sensor data element #{sensors_index} for sensor #{sensors_index} to have a non-zero value got #{sensor_data[data_index]}."
         end
       end
     end

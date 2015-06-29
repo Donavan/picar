@@ -30,6 +30,10 @@ LSM303::LSM303(const char * i2cDeviceName) :
 {
     I2CBus i2c(i2cDeviceName);
     bool sa0;
+    _enabled = false;
+
+    a[0] = a[1] = a[2] = 0;
+    m[0] = m[1] = m[2] = 0;
 
     if (i2c.tryReadByte(D_SA0_HIGH_ADDRESS, LSM303_WHO_AM_I) == D_WHO_ID)
     {
@@ -197,44 +201,50 @@ void LSM303::enable(void)
          // MD = 00 (continuous-conversion mode)
         writeMagReg(LSM303_MR_REG_M, 0b00000000);
     }
+
+    _enabled = true;
 }
 
 void LSM303::readAcc(void)
 {
-    uint8_t block[6];
-    i2c_acc.readBlock(0x80 | LSM303_OUT_X_L_A, sizeof(block), block);
-    a[0] = (int16_t)(block[0] | block[1] << 8);
-    a[1] = (int16_t)(block[2] | block[3] << 8);
-    a[2] = (int16_t)(block[4] | block[5] << 8);
+    if(_enabled) {
+        uint8_t block[6];
+        i2c_acc.readBlock(0x80 | LSM303_OUT_X_L_A, sizeof(block), block);
+        a[0] = (int16_t) (block[0] | block[1] << 8);
+        a[1] = (int16_t) (block[2] | block[3] << 8);
+        a[2] = (int16_t) (block[4] | block[5] << 8);
+    } else {
+        a[0] = a[1] = a[2] = 0;
+    }
 }
 
 void LSM303::readMag(void)
 {
     uint8_t block[6];
-
-    if (device == Device::LSM303D)
-    {
-        // LSM303D: XYZ order, little endian
-        i2c_mag.readBlock(0x80 | LSM303D_OUT_X_L_M, sizeof(block), block);
-        m[0] = (int16_t)(block[0] | block[1] << 8);
-        m[1] = (int16_t)(block[2] | block[3] << 8);
-        m[2] = (int16_t)(block[4] | block[5] << 8);
-    }
-    else if (device == Device::LSM303DLH)
-    {
-        // LSM303DLH: XYZ order, big endian
-        i2c_mag.readBlock(0x80 | LSM303DLH_OUT_X_H_M, sizeof(block), block);
-        m[0] = (int16_t)(block[1] | block[0] << 8);
-        m[1] = (int16_t)(block[3] | block[2] << 8);
-        m[2] = (int16_t)(block[5] | block[4] << 8);
-    }
-    else
-    {
-        // LSM303DLM, LSM303DLHC: XZY order, big endian (and same addresses)
-        i2c_mag.readBlock(0x80 | LSM303DLM_OUT_X_H_M, sizeof(block), block);
-        m[0] = (int16_t)(block[1] | block[0] << 8);
-        m[1] = (int16_t)(block[5] | block[4] << 8);
-        m[2] = (int16_t)(block[3] | block[2] << 8);
+    if(_enabled) {
+        if (device == Device::LSM303D) {
+            // LSM303D: XYZ order, little endian
+            i2c_mag.readBlock(0x80 | LSM303D_OUT_X_L_M, sizeof(block), block);
+            m[0] = (int16_t) (block[0] | block[1] << 8);
+            m[1] = (int16_t) (block[2] | block[3] << 8);
+            m[2] = (int16_t) (block[4] | block[5] << 8);
+        }
+        else if (device == Device::LSM303DLH) {
+            // LSM303DLH: XYZ order, big endian
+            i2c_mag.readBlock(0x80 | LSM303DLH_OUT_X_H_M, sizeof(block), block);
+            m[0] = (int16_t) (block[1] | block[0] << 8);
+            m[1] = (int16_t) (block[3] | block[2] << 8);
+            m[2] = (int16_t) (block[5] | block[4] << 8);
+        }
+        else {
+            // LSM303DLM, LSM303DLHC: XZY order, big endian (and same addresses)
+            i2c_mag.readBlock(0x80 | LSM303DLM_OUT_X_H_M, sizeof(block), block);
+            m[0] = (int16_t) (block[1] | block[0] << 8);
+            m[1] = (int16_t) (block[5] | block[4] << 8);
+            m[2] = (int16_t) (block[3] | block[2] << 8);
+        }
+    } else {
+        m[0] = m[1] = m[2] = 0;
     }
 }
 
