@@ -35,13 +35,13 @@ LSM303::LSM303(const char * i2cDeviceName) :
     a[0] = a[1] = a[2] = 0;
     m[0] = m[1] = m[2] = 0;
 
-    if (i2c.tryReadByte(D_SA0_HIGH_ADDRESS, LSM303_WHO_AM_I) == D_WHO_ID)
+    if (i2c.tryReadByteWithAddr(D_SA0_HIGH_ADDRESS, LSM303_WHO_AM_I) == D_WHO_ID)
     {
         // Detected LSM303D with SA0 high.
         device = Device::LSM303D;
         sa0 = true;
     }
-    else if (i2c.tryReadByte(D_SA0_LOW_ADDRESS, LSM303_WHO_AM_I) == D_WHO_ID)
+    else if (i2c.tryReadByteWithAddr(D_SA0_LOW_ADDRESS, LSM303_WHO_AM_I) == D_WHO_ID)
     {
         // device responds to address 0011110 with D ID; it's a D with SA0 low
         device = Device::LSM303D;
@@ -54,7 +54,7 @@ LSM303::LSM303(const char * i2cDeviceName) :
     // accelerometer address, because Pololu boards with the LSM303DLM or LSM303DLH
     // pull SA0 low.  The LSM303DLHC doesn't have SA0 but uses same accelerometer address
     // as LSM303DLH/LSM303DLM with SA0 high).
-    else if (i2c.tryReadByte(NON_D_ACC_SA0_HIGH_ADDRESS, LSM303_CTRL_REG1_A) >= 0)
+    else if (i2c.tryReadByteWithAddr(NON_D_ACC_SA0_HIGH_ADDRESS, LSM303_CTRL_REG1_A) >= 0)
     {
         // Guess that it's an LSM303DLHC.
         device = Device::LSM303DLHC;
@@ -62,11 +62,11 @@ LSM303::LSM303(const char * i2cDeviceName) :
     }
     // Remaining possibilities: LSM303DLM or LSM303DLH.
     // Check accelerometer with SA0 low address to make sure it's responsive.
-    else if (i2c.tryReadByte(NON_D_ACC_SA0_LOW_ADDRESS, LSM303_CTRL_REG1_A) >= 0)
+    else if (i2c.tryReadByteWithAddr(NON_D_ACC_SA0_LOW_ADDRESS, LSM303_CTRL_REG1_A) >= 0)
     {
         sa0 = false;
 
-        if (i2c.tryReadByte(NON_D_MAG_ADDRESS, LSM303_WHO_AM_I_M) == DLM_WHO_ID)
+        if (i2c.tryReadByteWithAddr(NON_D_MAG_ADDRESS, LSM303_WHO_AM_I_M) == DLM_WHO_ID)
         {
             // Detected LSM303DLM with SA0 low.
             device = Device::LSM303DLM;
