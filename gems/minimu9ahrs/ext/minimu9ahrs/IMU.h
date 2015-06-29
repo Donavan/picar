@@ -14,6 +14,7 @@ public:
     virtual void measureOffsets() = 0;
     virtual void enable() = 0;
     virtual void loadCalibration() = 0;
+    virtual void loadCalibrationFrom(const char *) = 0;
 
     vector gyro_offset;
     int_vector mag_min, mag_max;

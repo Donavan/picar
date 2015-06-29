@@ -25,6 +25,7 @@ public:
   }
   virtual void enable();
   virtual void loadCalibration();
+  virtual void loadCalibrationFrom(const char* source);
   virtual void measureOffsets();
 
   Rice::Array getRawMag();

@@ -1,7 +1,5 @@
 #include "vector.h"
 #include "MinIMU9.h"
-#include "exceptions.h"
-#include <stdio.h>
 #include <iostream>
 #include <fstream>
 #include <wordexp.h>
@@ -18,7 +16,7 @@ void MinIMU9::enable()
     gyro.enable();
 }
 
-void MinIMU9::loadCalibration()
+void MinIMU9::loadCalibrationFrom( const char* source)
 {
     wordexp_t expansion_result;
     wordexp("~/.minimu9-ahrs-cal", &expansion_result, 0);
@@ -28,13 +26,17 @@ void MinIMU9::loadCalibration()
     {
         throw posix_error("Failed to open calibration file ~/.minimu9-ahrs-cal.");
     }
-    
+
     file >> mag_min(0) >> mag_max(0) >> mag_min(1) >> mag_max(1) >> mag_min(2) >> mag_max(2);
     if (file.fail() || file.bad())
     {
         throw std::runtime_error("Failed to parse calibration file ~/.minimu9-ahrs-cal.");
     }
-    
+}
+
+void MinIMU9::loadCalibration()
+{
+    loadCalibrationFrom("~/.minimu9-ahrs-cal");
 }
 
 void MinIMU9::measureOffsets()
@@ -84,7 +86,7 @@ vector MinIMU9::readGyro()
     // L3G4200D: at FS = 2000 dps, 70 mdps/digit
     // L3GD20: at FS = 2000 dps, 70 mdps/digit
     // L3GD20H: at FS = 2000 dps, 70 mdps/digit
-    const float gyro_scale = 0.07 * 3.14159265 / 180;
+    const float gyro_scale = (const float) (0.07 * 3.14159265 / 180);
 
     gyro.read();
     IMU::raw_g = int_vector_from_ints(&gyro.g);

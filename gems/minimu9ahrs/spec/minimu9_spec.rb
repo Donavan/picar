@@ -56,6 +56,18 @@ describe Minimu9ahrs::MinIMU9 do
       expect(@minimu).to respond_to(:raw_gyro)
     end
 
+    it 'can provide load a calibration file from the default location' do
+      expect(@minimu).to respond_to(:load_calibration)
+    end
+
+    it 'can provide load a calibration file from a specific location' do
+      expect(@minimu).to respond_to(:load_calibration_from)
+    end
+
+    it 'can measure_offsets' do
+      expect(@minimu).to respond_to(:measure_offsets)
+    end
+
     describe 'enable functionality' do
       it 'returns false for enabled? if not enabled' do
         expect(@minimu.enabled?).to eq(false)
