@@ -1,8 +1,8 @@
 # Minimu9ahrs
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/minimu9ahrs`. To experiment with that code, run `bin/console` for an interactive prompt.
+ Ruby gem for reading data from the Pololu MinIMU-9 over I²C. Works on the Raspberry Pi and probably other embedded ARM Linux boards.
 
-TODO: Delete this and the text above, and describe your gem
+This gem provides bindings for the [minimu9-ahrs](https://github.com/DavidEGrayson/minimu9-ahrs) project.  At some point most of the C++ code in this will live in a library.  This is all very experimental currently.
 
 ## Installation
 
