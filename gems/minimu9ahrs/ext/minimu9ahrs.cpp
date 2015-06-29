@@ -46,4 +46,13 @@ void Init_minimu9ahrs()
             .define_method("read_acc_reg",  &LSM303::readAccReg)
             .define_method("write_mag_reg", &LSM303::writeMagReg)
             .define_method("read_mag_reg",  &LSM303::readMagReg);
+
+    Data_Type<I2CBus> rb_cI2CBus =  define_class_under<I2CBus>(rb_mModule, "I2CBus")
+            .define_constructor(Constructor<I2CBus, const char *>())
+            .define_method("address=",                &I2CBus::addressSet)
+            .define_method("try_read_byte",           &I2CBus::tryReadByte)
+            .define_method("try_read_byte_with_addr", &I2CBus::tryReadByteWithAddr)
+            .define_method("read_block",              &I2CBus::readBlock)
+            .define_method("read_byte",               &I2CBus::readByte)
+            .define_method("write_byte",              &I2CBus::writeByte);
 }
