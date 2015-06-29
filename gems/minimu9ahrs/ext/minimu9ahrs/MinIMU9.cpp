@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <wordexp.h>
+#include <sys/unistd.h>
 
 MinIMU9::MinIMU9(const char * i2cDeviceName) :
   compass(i2cDeviceName), gyro(i2cDeviceName)

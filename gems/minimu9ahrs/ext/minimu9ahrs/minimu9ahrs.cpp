@@ -20,5 +20,6 @@ void Init_minimu9ahrs()
                                 .define_method("raw_mag",  &MinIMU9::getRawMag)
                                 .define_method("raw_acc",  &MinIMU9::getRawAcc)
                                 .define_method("raw_gyro", &MinIMU9::getRawGyro)
-                                .define_method("raw_data", &MinIMU9::getRawData);
+                                .define_method("raw_data", &MinIMU9::getRawData)
+                                .define_method("enabled?", &MinIMU9::isEnabled);
 }

@@ -32,7 +32,7 @@ public:
   Rice::Array getRawGyro();
   Rice::Array getRawData();
 
-  bool isEnabled() { return _enabled; }
+  bool isEnabled() { return compass.isEnabled() && gyro.isEnabled(); }
 
 private:
   bool _enabled;
