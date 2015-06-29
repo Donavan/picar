@@ -34,6 +34,7 @@ public:
   Rice::Array getRawData();
 
   bool isEnabled() { return compass.isEnabled() && gyro.isEnabled(); }
+  L3G getGyro() { return gyro; }
 
 private:
   bool _enabled;

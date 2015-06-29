@@ -68,6 +68,11 @@ describe Minimu9ahrs::MinIMU9 do
       expect(@minimu).to respond_to(:measure_offsets)
     end
 
+    it 'makes the gyro available' do
+      expect(@minimu).to respond_to(:gyro)
+      expect(@minimu.gyro.class).to eq(Minimu9ahrs::L3G)
+    end
+
     describe 'enable functionality' do
       it 'returns false for enabled? if not enabled' do
         expect(@minimu.enabled?).to eq(false)

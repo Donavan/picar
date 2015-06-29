@@ -23,7 +23,8 @@ void Init_minimu9ahrs()
                                 .define_method("enabled?",              &MinIMU9::isEnabled)
                                 .define_method("load_calibration",      &MinIMU9::loadCalibration)
                                 .define_method("load_calibration_from", &MinIMU9::loadCalibrationFrom)
-                                .define_method("measure_offsets",       &MinIMU9::measureOffsets);
+                                .define_method("measure_offsets",       &MinIMU9::measureOffsets)
+                                .define_method("gyro",                  &MinIMU9::getGyro);
 
     Data_Type<L3G> rb_cL3G =  define_class_under<L3G>(rb_mModule, "L3G")
             .define_constructor(Constructor<L3G, const char *>())
